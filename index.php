@@ -1,3 +1,9 @@
+<?php
+require_once('conn.php');
+$query = "SELECT * FROM password";
+$result = mysqli_query($con, $query);
+?>
+
 <!DOCTYPE html>
 
 <html>
@@ -23,7 +29,6 @@
         }
         .text_font{
             opacity: 1;
-            font-family:Comic Sans MS, cursive, sans-serif;
         }
         .row-header{
             position: auto;
@@ -52,7 +57,7 @@
         <div class="row row-header">
         
             <div class="col-12">
-                <h3>Genrate Password</h3>
+                <h4>Genrate Password</h4>
             </div>
             <div class="col-12">
                 <form role="form" method="post">
@@ -65,6 +70,8 @@
                             </form>
                         </div>
                     </div>
+                </form>
+                <form method="post" role= "form">
                     <div class="form-group row">
                         <label for="passgen" class="col-md-2 col-form-label">Generated Password</label>
                         <div class="col-md-8">
@@ -118,7 +125,38 @@
     </div>
     </section>
     <section class="cl_white text-center" id="display" style="background-color: cadetblue ; background-size: 100% 100%;" >
-
+        <div class="container">
+            <div class="row row-content">
+                <div class="col-12 col-sm-9">
+                    <h2 style="color: black;">List of All The Password</h2>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-dark" style="color: black;">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th><h4>User</h4></th>
+                                    <th><h4>Password</h4></th>
+                                    <th><h4>Description</h4></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    while($row = mysqli_fetch_assoc($result))
+                                    {
+                                        ?>
+                                        <tr>
+                                            <td name="user"><h4><?php echo $row['User']?></h4></td>
+                                            <td name="pass"><h4><?php echo $row['Pass_Gen']?></h4></td>
+                                            <td name="descript"><h4><?php echo $row['Descript']?></h4></td>
+                                        </tr>
+                                        <?php
+                                        
+                                    }?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>    
     </section>
 
 </body>
@@ -133,16 +171,15 @@ if(isset($_POST['submit']))
     $user = $_POST['user'];
     $des = $_POST['description'];
     
-    
-    
-    $sql = "INSERT INTO password (User, Pass_Gen, Descript) VALUES('".$user."', '".$password."', '".$des."')";
-    if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
-      } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-      }
-      
-      $conn->close();
+    $query = "INSERT INTO password (User, Pass_Gen, Descript) VALUES('".$user."', '".$password."', '".$des."')";
+    $result = mysqli_query($con, $query);
+    if ($result) {
+        echo "<script>alert('New record created successfully');</script>";
+  } else {
+        echo "<script>alert('Error: " . $query . "<br>" . mysqli_error($con)."');</script>";
+  }
+  mysqli_close($con);
+  
 }
 
     
